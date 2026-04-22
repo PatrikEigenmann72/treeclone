@@ -1,10 +1,56 @@
-# treeclone
+#!/bin/bash
+
+# ------------------------------------------------------------------------------------
+# Script:       readme
+# Description:  Regenerates README.md with About, Author, and a live file tree.
+# ------------------------------------------------------------------------------------
+# Author:       Patrik Eigenmann
+# eMail:        p.eigenmann72@gmail.com
+# GitHub:       https://github.com/PatrikEigenmann72
+# ------------------------------------------------------------------------------------
+# Change log:
+# Mon 2026-04-13 File created.                                          Version: 00.01
+# Tue 2026-04-14 Added the About and Author part.                       Version: 00.02
+# Wed 2026-04-15 First attempt to produce a live tree of the active d.  Version: 00.03
+# Thu 2026-04-16 Second attempt to produce a live tree of the directory.Version: 00.04
+# Sun 2026-04-19 Decided to write a tree clone, because MacOS doesn't ship
+#                with the UNIX tree tool organically. And I don't like homebrew,
+#                so I homebrewed myself -> happy having some C skills.  Version: 00.05
+# ------------------------------------------------------------------------------------
+PROJECT=$(basename "$PWD")
+TODAY=$(date +"%a %Y-%m-%d")
+
+# Generate a clean, human-readable tree (excluding build/, .git/, .vscode/, .DS_Store)
+ROOT=$(basename "$PWD")
+
+find . \
+  -path "./.git" -prune -o \
+  -path "./.vscode" -prune -o \
+  -path "./build" -prune -o \
+  -path "./bin" -prune -o \
+  -path "./.DS_Store" -prune -o \
+  -path "./.gitignore" -prune -o \
+  -print |
+grep -vE '^\.$' |
+sed "s|^\./|$ROOT/|" \
+> /tmp/tree_raw.txt
+
+sort /tmp/tree_raw.txt > /tmp/tree_sorted.txt
+
+TREE=$(treeclone -exclude "*.tmp, tmp/, *.log, .git/, .vscode, .DS_Store, bin/, build/")
+
+cat > README.md <<EOF
+# $PROJECT
 
 ## About
 
-The original tree command didn’t come from UNIX at all — it first appeared in the DOS world in the 1980s, where early PC operating systems needed a simple way to visualize directory structures. Over time, the idea spread, and the version most developers know today — the one installed on Linux and BSD systems — was written by Steve Baker, whose implementation
+The original tree command didn’t come from UNIX at all — it first appeared in the DOS world in the 1980s, where early PC operating systems needed a simple way to visualize directory
 
-became the de‑facto standard across UNIX‑like environments. Other variants appeared in FreeDOS (by Dave Dunfield) and ReactOS (by Asif Bahrainwala), but Baker’s version is the one that shaped how developers think about tree today.
+structures. Over time, the idea spread, and the version most developers know today — the one installed on Linux and BSD systems — was written by Steve Baker, whose implementation
+
+became the de‑facto standard across UNIX‑like environments. Other variants appeared in FreeDOS (by Dave Dunfield) and ReactOS (by Asif Bahrainwala), but Baker’s version is the one that shaped
+
+how developers think about tree today.
 
 
 "treeclone" is a small, focused re‑implementation of the classic tree utility. It doesn’t aim to replicate every feature of Steve Baker’s version, and it doesn’t include the dozens of flags and formatting modes that the original tool accumulated over the years. Instead, it concentrates on the core behavior that makes tree useful in the first place: walking a directory, sorting entries, and printing a clean, readable ASCII tree.
@@ -27,24 +73,7 @@ So treeclone exists because I needed a lightweight, predictable way to generate 
 
 The folders build/ with their artifacts *.class will not be tracked.
 
-treeclone/
-├── include/
-│   ├── samael.alchemy.manpage.h
-│   ├── samael.alchemy.stringutility.h
-│   ├── samael.chronicle.config.h
-│   ├── samael.huginandmunin.debug.h
-│   ├── samael.huginandmunin.log.h
-│   └── treeclone.h
-├── src/
-│   ├── main.c
-│   ├── samael.alchemy.manpage.c
-│   ├── samael.alchemy.stringutility.c
-│   ├── samael.chronicle.config.c
-│   ├── samael.huginandmunin.log.c
-│   └── treeclone.c
-├── LICENSE
-├── README.md
-└── readme
+$TREE
 
 ## Author
 
@@ -57,4 +86,7 @@ If you want to support my work, you can send a donation to p.eigenmann@gmx.net v
 Everything I publish is free under the GNU Public License v3.0. Use it, modify it, break it, rebuild it — whatever helps you learn or solve your own problems.
 
 ## Last Updated
-Wed 2026-04-22
+$TODAY
+EOF
+
+echo "README.md regenerated successfully."
