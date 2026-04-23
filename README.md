@@ -1,10 +1,14 @@
-# treeclone
+# $PROJECT
 
 ## About
 
-The original tree command didn’t come from UNIX at all — it first appeared in the DOS world in the 1980s, where early PC operating systems needed a simple way to visualize directory structures. Over time, the idea spread, and the version most developers know today — the one installed on Linux and BSD systems — was written by Steve Baker, whose implementation
+The original tree command didn’t come from UNIX at all — it first appeared in the DOS world in the 1980s, where early PC operating systems needed a simple way to visualize directory
 
-became the de‑facto standard across UNIX‑like environments. Other variants appeared in FreeDOS (by Dave Dunfield) and ReactOS (by Asif Bahrainwala), but Baker’s version is the one that shaped how developers think about tree today.
+structures. Over time, the idea spread, and the version most developers know today — the one installed on Linux and BSD systems — was written by Steve Baker, whose implementation
+
+became the de‑facto standard across UNIX‑like environments. Other variants appeared in FreeDOS (by Dave Dunfield) and ReactOS (by Asif Bahrainwala), but Baker’s version is the one that shaped
+
+how developers think about tree today.
 
 
 "treeclone" is a small, focused re‑implementation of the classic tree utility. It doesn’t aim to replicate every feature of Steve Baker’s version, and it doesn’t include the dozens of flags and formatting modes that the original tool accumulated over the years. Instead, it concentrates on the core behavior that makes tree useful in the first place: walking a directory, sorting entries, and printing a clean, readable ASCII tree.
@@ -27,6 +31,7 @@ So treeclone exists because I needed a lightweight, predictable way to generate 
 
 The folders build/ with their artifacts *.class will not be tracked.
 
+```
 treeclone/
 ├── include/
 │   ├── samael.alchemy.manpage.h
@@ -45,6 +50,7 @@ treeclone/
 ├── LICENSE
 ├── README.md
 └── readme
+```
 
 ## Author
 
@@ -57,4 +63,4 @@ If you want to support my work, you can send a donation to p.eigenmann@gmx.net v
 Everything I publish is free under the GNU Public License v3.0. Use it, modify it, break it, rebuild it — whatever helps you learn or solve your own problems.
 
 ## Last Updated
-Wed 2026-04-22
+$TODAY
