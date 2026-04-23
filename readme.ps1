@@ -1,6 +1,5 @@
-#!/bin/bash
 # ------------------------------------------------------------------------------------
-# Script:       readme
+# Script:       readme.ps1
 # Description:  Regenerates README.md with About, Author, and a live file tree.
 # ------------------------------------------------------------------------------------
 # Author:       Patrik Eigenmann
@@ -8,21 +7,20 @@
 # GitHub:       https://github.com/PatrikEigenmann72
 # ------------------------------------------------------------------------------------
 # Change log:
-# Mon 2026-04-13 File created.                                          Version: 00.01
-# Tue 2026-04-14 Added the About and Author part.                       Version: 00.02
-# Wed 2026-04-15 First attempt to produce a live tree of the active d.  Version: 00.03
-# Thu 2026-04-16 Second attempt to produce a live tree of the directory.Version: 00.04
-# Sun 2026-04-19 Decided to write a tree clone, because MacOS doesn't ship
-#                with the UNIX tree tool organically. And I don't like homebrew,
-#                so I homebrewed myself -> happy having some C skills.  Version: 00.05
-# Wed 2026-04-22 Fixing a bug, display issues and heredoc issues.       Version: 00.06
+# Wed 2026-04-22 File created.                                          Version: 00.01
 # ------------------------------------------------------------------------------------
-PROJECT=$(basename "$PWD")
-TODAY=$(date +"%a %Y-%m-%d")
 
-TREE=$(treeclone)
+# Project name = current folder name
+$PROJECT = Split-Path -Leaf (Get-Location)
 
-cat > README.md <<EOF
+# Today's date
+$TODAY = Get-Date -Format "ddd yyyy-MM-dd"
+
+# Run treeclone and capture output
+$TREE = treeclone | Out-String
+
+# Start writing README.md
+@"
 # $PROJECT
 
 ## About
@@ -46,14 +44,7 @@ So treeclone exists because I needed a lightweight, predictable way to generate 
 
 The folders with binaries like executables, *.class - files, *.dll's will not be tracked.
 
-EOF
-
-# append the tree output literally
-echo '```' >> README.md
-echo "$TREE" >> README.md
-echo '```' >> README.md
-
-cat >> README.md <<EOF
+$TREE
 
 ## Author
 
@@ -64,6 +55,6 @@ Everything I publish is free under the GNU Public License v3.0. Use it, modify i
 
 ## Last Updated
 $TODAY
-EOF
+"@ | Set-Content -Encoding UTF8 README.md
 
-echo "README.md regenerated successfully."
+Write-Host "README.md regenerated successfully."
