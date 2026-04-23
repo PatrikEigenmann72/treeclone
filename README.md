@@ -29,7 +29,7 @@ So treeclone exists because I needed a lightweight, predictable way to generate 
 
 ## Folder Structure
 
-The folders build/ with their artifacts *.class will not be tracked.
+The folders with binaries like executables, *.class - files, *.dll's will not be tracked.
 
 ```
 treeclone/
