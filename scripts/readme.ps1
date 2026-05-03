@@ -8,6 +8,7 @@
 # ------------------------------------------------------------------------------------
 # Change log:
 # Wed 2026-04-22 File created.                                          Version: 00.01
+# Sat 2026-05-02 Dynamic content management for About/Why per project.  Version: 00.02
 # ------------------------------------------------------------------------------------
 
 # Project name = current folder name
@@ -16,6 +17,12 @@ $PROJECT = Split-Path -Leaf (Get-Location)
 # Today's date
 $TODAY = Get-Date -Format "ddd yyyy-MM-dd"
 
+# Working directory (equivalent to $PWD in Bash)
+$ROOT = Get-Location
+
+# Path to project-specific text
+$ProjectTxt = Join-Path $ROOT "resources/txt/project.txt"
+
 # Run treeclone and capture output
 $TREE = treeclone | Out-String
 
@@ -23,22 +30,12 @@ $TREE = treeclone | Out-String
 @"
 # $PROJECT
 
-## About
+"@ | Set-Content -Encoding UTF8 README.md
 
-The original tree command didn’t come from UNIX at all — it first appeared in the DOS world in the 1980s, where early PC operating systems needed a simple way to visualize directory
-structures. Over time, the idea spread, and the version most developers know today — the one installed on Linux and BSD systems — was written by Steve Baker, whose implementation
-became the de‑facto standard across UNIX‑like environments. Other variants appeared in FreeDOS (by Dave Dunfield) and ReactOS (by Asif Bahrainwala), but Baker’s version is the one that shaped
-how developers think about tree today.
+# Insert project-specific text
+Get-Content $ProjectTxt | Add-Content -Encoding UTF8 README.md
 
-"treeclone" is a small, focused re‑implementation of the classic tree utility. It doesn’t aim to replicate every feature of Steve Baker’s version, and it doesn’t include the dozens of flags and formatting modes that the original tool accumulated over the years. Instead, it concentrates on the core behavior that makes tree useful in the first place: walking a directory, sorting entries, and printing a clean, readable ASCII tree.
-The tool supports a single command‑line option, -exclude, which filters out files or directories matching simple patterns. For my workflow, that’s the only feature I actually need. Everything else — depth limiting, color output, metadata, permissions, timestamps — is intentionally left out. The goal is clarity, not completeness.
-Internally, treeclone uses a lightweight C kernel with deterministic sorting, directory‑first ordering, and always‑on logging. The output is stable, predictable, and easy to embed into documentation or tooling. It’s a compact utility that does one job well: generate a clean directory tree without external dependencies.
-
-## Why This Exists
-
-Before treeclone, I tried to generate directory trees on macOS using shell scripts. It was clumsy, inconsistent, and never produced output I actually liked. macOS doesn’t ship with the tree command, and every search result pointed to the same solution: install Homebrew. But Homebrew brings a lot with it — packages, dependencies, updates, and a whole ecosystem I didn’t want just to get one simple tool.
-I know enough languages to be dangerous — C, Java, PHP, Python — but not enough in any of them to write a perfect clone of the original tree. Still, if I was going to “homebrew” something, I wanted to do it properly. A small, clean C program made the most sense: no dependencies, no package managers, no surprises. Just compile it and run it.
-So treeclone exists because I needed a lightweight, predictable way to generate directory trees on macOS without pulling in an entire package manager. It’s not a full replacement for the original tree, and it doesn’t try to be. It’s a simple tool that solves a simple problem — and for my workflow, that’s enough.
+@"
 
 ## Folder Structure
 
@@ -55,6 +52,6 @@ Everything I publish is free under the GNU Public License v3.0. Use it, modify i
 
 ## Last Updated
 $TODAY
-"@ | Set-Content -Encoding UTF8 README.md
+"@ | Add-Content -Encoding UTF8 README.md
 
 Write-Host "README.md regenerated successfully."
